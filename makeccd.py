@@ -10,6 +10,60 @@ from datetime import date
 # 	if arr[i] != '':
 # 		print '{} -- {}'.format(i+1,arr[i])
 
+import contextlib
+import OpenSSL.crypto
+import os
+import requests
+import ssl
+import tempfile
+import xml.etree.ElementTree as ET
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Daric.settings")
+from home.models import TFSBLoanApp,TradeLine
+
+data = {}
+
+instance = TFSBLoanApp.objects.get(id=115)
+for field,val in instance:
+	if val != '':
+		# print field,val
+		data[field] = val
+
+data2 = {}
+
+data2['proceeds_amount'] = data['LoanAmount']
+data2['check_amount'] = data['LoanAmount']
+data2['original_interest'] = 0
+data2['contract_amount'] = 0
+data2['term'] = data['term']
+data2['b1_name'] = data['FirstName']+' '+data['LastName']
+data2['mail_street_address'] = data['Address1']
+data2['mail_city_state'] = data['City']+' '+data['State']
+data2['mail_zip'] = data['Zip']
+data2['home_phone_number'] = data['PreferredPhone'].replace('(','').replace(')','').replace('-','')
+data2['property_street_address'] = data['Address1']
+data2['property_city_state'] = data['City']+' '+data['State']
+data2['property_zip'] = data['Zip']
+data2['b1_birthday'] = data['DateOfBirth'].replace('/','')
+data2['b1_ID_type'] = 'SSN'
+data2['b2_ID_type'] = 'SSN'
+data2['b2_issue_contry'] = 'US'
+data2['b2_street_address'] = data['CoApp_StreetAddress']
+data2['b2_city_state'] = data['CoApp_City']+' '+data['CoApp_State']
+data2['b2_zip'] = data['CoApp_Zip']
+data2['purpose_code'] = '02' #Debt Consolidation
+data2['b2_phone_number'] = data['CoApp_Phone'].replace('(','').replace(')','').replace('-','')
+data2['marital_status'] = '0' # married
+data2['personal_residence_flag'] = '0' #own
+data2['qualifying_income'] = str(float(data['GrossAnnualIncome']) + float(data['CoApp_IncomeGross']))
+data2['b2_homeownner_code'] = '0' # own
+data2['b2_birthday'] = data['CoApp_DateOfBirth'].replace('/','')
+data2['b1_credit_rating'] = '1' # data['fico_model_used']=732
+data2['b1_employer_name'] = data['EmployerName']
+data2['b2_employer_name'] = data['CoApp_EmployerName']
+
+
+
+
 def parse_data(data,default,key):
 	if key in data:
 		return data[key]
@@ -27,6 +81,8 @@ def make_str(s,length):
 	return res
 
 def makeccd(data):
+	# for key,val in data.items():
+	# 	print key,val
 	default = {}
 	default['loan_number'] = '1919191919'
 	default['interest_type'] = '1'
@@ -67,6 +123,7 @@ def makeccd(data):
 	default['b2_issue_contry'] = 'US'
 	default['b2_city_state'] = 'Brookfield WI'
 	default['b2_zip'] = '53045'
+	default['country_code'] = '001' #US
 
 	loan_number = parse_data(data,default,'loan_number')
 	interest_type = parse_data(data,default,'interest_type')
@@ -106,6 +163,17 @@ def makeccd(data):
 	b2_issue_contry = parse_data(data,default,'b2_issue_contry')
 	b2_city_state = parse_data(data,default,'b2_city_state')
 	b2_zip = parse_data(data,default,'b2_zip')
+	purpose_code = parse_data(data,default,'purpose_code')
+	b2_birthday = parse_data(data,default,'b2_birthday')
+	b2_homeownner_code = parse_data(data,default,'b2_homeownner_code')
+	b1_credit_rating = parse_data(data,default,'b1_credit_rating')
+	b2_phone_number = parse_data(data,default,'b2_phone_number')
+	marital_status = parse_data(data,default,'marital_status')
+	personal_residence_flag = parse_data(data,default,'personal_residence_flag')
+	b1_employer_name = parse_data(data,default,'b1_employer_name')
+	b2_employer_name = parse_data(data,default,'b2_employer_name')
+	country_code = parse_data(data,default,'country_code')
+	b2_street_address = parse_data(data,default,'b2_street_address')
 
 	lst = ['']*1515
 
@@ -135,6 +203,11 @@ def makeccd(data):
 	lst[48] = interest_pmt_type[0]
 	lst[59] = make_str(b1_name,15)
 	lst[60] = officer_number[0:3]
+	lst[62] = make_str(b1_employer_name,15)
+	lst[79] = purpose_code[0:1]
+	lst[81] = country_code[0:3]
+	lst[217] = personal_residence_flag[0]
+	lst[228] = date.today().strftime('%Y%m%d') #application date
 	lst[332] = b1_tin[0:14]
 	lst[323] = b1_relationship[0:3]
 	lst[325] = make_str(b1_name,35)
@@ -146,15 +219,22 @@ def makeccd(data):
 	lst[337] = make_str(property_city_state,35)
 	lst[338] = property_zip[0:9]
 	lst[341] = b1_birthday
+	lst[350] = b1_credit_rating[0]
 	lst[625] = b1_ID_type[0:2]
 	lst[631] = b2_ID_type[0:2]
 	lst[632] = b2_issue_contry[0:2]
 	lst[640] = make_str(b1_name,40)
+	lst[642] = make_str(mail_street_address,40)
+	lst[643] = make_str(b2_street_address,40)
 	lst[645] = make_str(b2_city_state,27)
 	lst[646] = b2_zip[0:9]
+	lst[647] = b2_phone_number[0:10]
+	lst[650] = b2_birthday
+	lst[667] = make_str(b2_employer_name,40)
+	lst[671] = b2_homeownner_code[0]
 
 	return ','.join(lst)
 
 
-res = makeccd({})
+res = makeccd(data2)
 print res
