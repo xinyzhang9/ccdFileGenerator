@@ -60,7 +60,15 @@ data2['b2_birthday'] = data['CoApp_DateOfBirth'].replace('/','')
 data2['b1_credit_rating'] = '1' # data['fico_model_used']=732
 data2['b1_employer_name'] = data['EmployerName']
 data2['b2_employer_name'] = data['CoApp_EmployerName']
-
+data2['b1_ssn'] = data['SSN'].replace('-','')
+data2['b2_ssn'] = data['CoApp_SSN'].replace('-','')
+data2['b1_email'] = data['Email']
+data2['b2_email'] = data['CoApp_Email']
+data2['regular_pmt_amount'] = data['MortgagePayment'] #???
+data2['payment_obligated'] = data['PaymentsObligated'] 
+data2['bankruptcies'] = data['bankruptcies']
+data2['debt_to_income'] = data['debt_to_income']
+data2['active_duty_or_veteran'] = data['ActiveDutyOrVeteran']
 
 
 
@@ -174,6 +182,16 @@ def makeccd(data):
 	b2_employer_name = parse_data(data,default,'b2_employer_name')
 	country_code = parse_data(data,default,'country_code')
 	b2_street_address = parse_data(data,default,'b2_street_address')
+	b1_ssn = parse_data(data,default,'b1_ssn')
+	b2_ssn = parse_data(data,default,'b2_ssn')
+	b1_email = parse_data(data,default,'b1_email')
+	b2_email = parse_data(data,default,'b2_email')
+	regular_pmt_amount = parse_data(data,default,'regular_pmt_amount')
+	payment_obligated = parse_data(data,default,'payment_obligated')
+	bankruptcies = parse_data(data,default,'bankruptcies')
+	debt_to_income = parse_data(data,default,'debt_to_income')
+	active_duty_or_veteran = parse_data(data,default,'active_duty_or_veteran')
+
 
 	lst = ['']*1515
 
@@ -194,6 +212,7 @@ def makeccd(data):
 	lst[15] = str('%.3f' % float(apr))
 	lst[17] = maturity_date
 	lst[20] = term[0:3]
+	lst[22] = str('%.2f' % float(regular_pmt_amount)) # mortgage payment?
 	lst[23] = first_pmt_due_date
 	lst[24] = pmt_due_day[0:2]
 	lst[25] = no_of_pmt[0:3]
@@ -232,6 +251,20 @@ def makeccd(data):
 	lst[650] = b2_birthday
 	lst[667] = make_str(b2_employer_name,40)
 	lst[671] = b2_homeownner_code[0]
+
+	#customized fields
+	lst[242] = '001' #b1_ssn
+	lst[243] = b1_ssn
+	lst[244] = '002' #b2_ssn
+	lst[245] = b2_ssn
+	lst[246] = '003' #b1_ssn
+	lst[247] = b1_email
+	lst[248] = '004' #b2_ssn
+	lst[249] = b2_email
+	lst[344] = debt_to_income[0:10]
+	lst[345] = active_duty_or_veteran[0:10]
+	lst[347] = payment_obligated[0]
+	lst[348] = bankruptcies[0]
 
 	return ','.join(lst)
 
