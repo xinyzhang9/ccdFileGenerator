@@ -35,8 +35,8 @@ data2['check_amount'] = data['LoanAmount']
 data2['original_interest'] = 1000 # total finance charge
 data2['contract_amount'] = 13500 # total of payments
 data2['term'] = data['term']
-data2['b1_name'] = ':'+data['FirstName']+'::'+data['LastName']+':'
-data2['b1_name_simple'] = data['FirstName']+' '+data['LastName']
+data2['b1_name'] = ':'+data['FirstName'].rstrip()+'::'+data['LastName'].rstrip()+':'
+data2['b1_name_simple'] = data['FirstName'].rstrip()+' '+data['LastName'].rstrip()
 data2['mail_street_address'] = data['Address1']
 data2['mail_city_state'] = data['City']+' '+data['State']
 data2['mail_zip'] = data['Zip']
@@ -70,7 +70,7 @@ data2['payment_obligated'] = data['PaymentsObligated']
 data2['bankruptcies'] = data['bankruptcies']
 data2['debt_to_income'] = data['debt_to_income']
 data2['active_duty_or_veteran'] = data['ActiveDutyOrVeteran']
-data2['b2_name'] = ':'+data['CoApp_FirstName']+'::'+data['CoApp_LastName']+':'
+data2['b2_name'] = ':'+data['CoApp_FirstName'].rstrip()+'::'+data['CoApp_LastName'].rstrip()+':'
 
 
 def parse_data(data,default,key):
@@ -236,7 +236,7 @@ def makeccd(data):
 	lst[11] = str('%.2f' % float(original_interest))
 	lst[12] = str('%.2f' % float(contract_amount))
 	lst[13] = str('%.4f' % float(interest_rate))
-	lst[14] = date.today().strftime('%Y%m')
+	lst[14] = date.today().strftime('%m%d%y')
 	lst[15] = str('%.3f' % float(apr))
 	lst[17] = maturity_date
 	lst[20] = term[0:3]
@@ -248,7 +248,7 @@ def makeccd(data):
 	lst[27] = pmt_frequency[0]
 	lst[28] = str('%.2f' % float(escrow_pmt_amount))
 	lst[32] = repayment_plan[0]
-	lst[44] = lst[14] # accur thru date
+	lst[42] = lst[14] # accur thru date
 	lst[45] = VRL
 	lst[46] = LOC
 	lst[48] = interest_pmt_type[0]
@@ -261,10 +261,10 @@ def makeccd(data):
 	lst[80] = property_code[0:2]
 	lst[81] = country_code[0:3]
 	lst[82] = second_mortgage_code
-	lst[83] = date.today().strftime('%Y%m') # appraisal date
+	lst[83] = date.today().strftime('%m%d%y') # appraisal date
 	lst[216] = state_code
 	lst[217] = personal_residence_flag[0]
-	lst[228] = date.today().strftime('%Y%m') #application date
+	lst[228] = date.today().strftime('%m%d%y') #application date
 	lst[232] = year_built[0:4]
 	lst[322] = b1_ssn[0:9]# tax id1 (ssn)
 	lst[323] = b1_relationship[0:3]
@@ -309,7 +309,15 @@ def makeccd(data):
 	lst[347] = payment_obligated[0]
 	lst[348] = bankruptcies[0]
 
-	return ','.join(lst)
+	res = ','.join(lst)
+	# arr = res.split(',')
+	# print len(arr)
+
+	# for i in range(len(arr)):
+	# 	if arr[i] != '':
+	# 		print '{} -- {}'.format(i+1,arr[i])
+
+	return res
 
 
 res = makeccd(data2)
