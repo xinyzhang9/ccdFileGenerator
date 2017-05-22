@@ -40,21 +40,21 @@ delinquent_risk_scorecard_101	=	''
 
 delinquent_risk_scorecard_102	=	''
 
-PreferredPhone	=	'167'
+PreferredPhone	=	''
 
-DateOfBirth	=	'342'
+DateOfBirth	=	''
 
 Email	=	''
 
-FirstName	=	'326'
+FirstName	=	''
 
-LastName	=	'326'
+LastName	=	''
 
-LoanPurpose	=	'80'
+LoanPurpose	=	''
 
 LoanAmount	=	''
 
-OwnOrRent	=	'363'
+OwnOrRent	=	''
 
 RentAmount	=	''
 
@@ -62,13 +62,13 @@ temporaryPassword	=	''
 
 MortgagePayment	=	''
 
-Address1	=	'333'
+Address1	=	''
 
-City	=	'334'
+City	=	''
 
-State	=	'334'
+State	=	''
 
-Zip	=	'335'
+Zip	=	''
 
 CurrentAddressTwoYears	=	''
 
@@ -122,7 +122,7 @@ creditcardstatementsAccepted	=	''
 
 MilitaryServiceYears	=	''
 
-EmployerName	=	'359'
+EmployerName	=	''
 
 JobTitle	=	''
 
@@ -146,11 +146,11 @@ PaymentsObligatedAmount	=	''
 
 CoApplicant	=	''
 
-CoApp_DateOfBirth	=	'651'
+CoApp_DateOfBirth	=	''
 
-CoApp_FirstName	=	'331'
+CoApp_FirstName	=	''
 
-CoApp_LastName	=	'331'
+CoApp_LastName	=	''
 
 CoApp_OwnOrRent	=	''
 
@@ -158,21 +158,21 @@ CoApp_RentAmount	=	''
 
 CoApp_MortgagePayment	=	''
 
-CoApp_StreetAddress	=	'644'
+CoApp_StreetAddress	=	''
 
-CoApp_City	=	'646'
+CoApp_City	=	''
 
-CoApp_State	=	'646'
+CoApp_State	=	''
 
-CoApp_Zip	=	'647'
+CoApp_Zip	=	''
 
-CoApp_Phone	=	'168'
+CoApp_Phone	=	''
 
 CoApp_Email	=	''
 
 CoApp_SSN	=	''
 
-CoApp_EmployerName	=	'668'
+CoApp_EmployerName	=	''
 
 CoApp_IncomeGross	=	''
 
@@ -196,21 +196,21 @@ TCPA_Release	=	''
 
 CoApp_RelationToApplicant	=	''
 
-GrossAnnualIncome	=	'227'
+GrossAnnualIncome	=	''
 
 decision	=	''
 
 originationFee	=	''
 
-apr	=	'5'
+apr	=	''
 
-interestRate	=	'14'
+interestRate	=	''
 
 interestRatePercent	=	''
 
 monthlyPayment	=	''
 
-term	=	'21'
+term	=	''
 
-timeStamp	=	'15'
+timeStamp	=	''
 
